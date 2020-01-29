@@ -1,5 +1,7 @@
 
 #include <stdio.h>
+#include <iostream>
+using namespace std;
 
 
 //-----------------------------------------------------------------------------
@@ -39,14 +41,14 @@ typedef		gs_battleship_space_state		gs_battleship[GS_BATTLESHIP_PLAYERS][GS_BATT
 #define GS_BATTLESHIP_VALID(p,x,y)				GS_VALIDATE_COORDINATE(x,y,p,GS_BATTLESHIP_BOARD_WIDTH,GS_BATTLESHIP_BOARD_HEIGHT,GS_BATTLESHIP_PLAYERS)
 
 
-inline gs_battleship_space_state gs_checkers_getSpaceState(gs_battleship const game, gs_battleship_index const player, gs_battleship_index const xpos, gs_battleship_index const ypos)
+inline gs_battleship_space_state gs_battleship_getSpaceState(gs_battleship const game, gs_battleship_index const player, gs_battleship_index const xpos, gs_battleship_index const ypos)
 {
 	if (GS_BATTLESHIP_VALID(player, xpos, ypos))
 		return (game[player][xpos][ypos]);
 	return gs_battleship_space_invalid;
 }
 
-inline gs_battleship_space_state gs_checkers_setSpaceState(gs_battleship game, gs_battleship_space_state const state, gs_battleship_index const player, gs_battleship_index const xpos, gs_battleship_index const ypos)
+inline gs_battleship_space_state gs_battleship_setSpaceState(gs_battleship game, gs_battleship_space_state const state, gs_battleship_index const player, gs_battleship_index const xpos, gs_battleship_index const ypos)
 {
 	if (GS_BATTLESHIP_VALID(player, xpos, ypos))
 		return (game[player][xpos][ypos] = state);
@@ -68,12 +70,64 @@ inline gs_battleship_index gs_battleship_reset(gs_battleship game)
 //-----------------------------------------------------------------------------
 // DEFINITIONS
 
+void drawBoard(gs_battleship game)
+{
+	cout << "  A|B|C|D|E|F|G|H|I|J|" << endl;
+	for (int i = 1; i < 10; i++)
+	{
+		cout << i << " ";
+		for (int j = 0; j < 10; j++)
+		{
+			cout << gs_battleship_getSpaceState(game, 1, i, j) << "|";
+		}
+		cout << "\n  --------------------" << endl;
+	}
+
+}
+
+void setUpGame(gs_battleship game, int player)
+{
+	char shipToBePlaced;
+	int column, row;
+	cout << "What ship would you like to place?: (P)atrol, (S)ubmarine, (D)estroyer, (B)attleship, (C)arrier";
+	cin >> shipToBePlaced;
+
+	switch (shipToBePlaced)
+	{
+	case 'P':
+		cout << "Enter a column: ";
+		cin >> column;
+		cout << "Enter a row: ";
+		cin >> row;
+		gs_battleship_setSpaceState(game, player, column, row);
+		break;
+	case 'S':
+		break;
+	case 'D':
+		break;
+	case 'B':
+		break;
+	case 'C':
+		break;
+	}
+}
+
 int launchBattleship()
 {
 	gs_battleship game = { 0 };
 
 	gs_battleship_reset(game);
 
+	int column, row, player = 0;
+
+	drawBoard(game);
+
+	setUpGame(game, player);
+
+	cout << "Enter a column: ";
+	cin >> column;
+	cout << "Enter a row: ";
+	cin >> row;
 
 
 	return 0;
