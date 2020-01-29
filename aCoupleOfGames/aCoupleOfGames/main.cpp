@@ -3,7 +3,7 @@
 
 int main()
 {
-	//launchTicTacToe();
-	launchBattleship();
+	launchTicTacToe();
+	//launchBattleship();
 	return 0;
 }

@@ -6,7 +6,6 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
-using namespace std;
 
 //-----------------------------------------------------------------------------
 // DECLARATIONS
@@ -66,68 +65,63 @@ inline gs_tictactoe_index gs_tictactoe_reset(gs_tictactoe game)
 //-----------------------------------------------------------------------------
 // DEFINITIONS
 
-void drawBoard(vector<char> changes)
+char XOPrinter(gs_tictactoe game, int i, int j)
 {
-	int i = 0;
-	while (i <= 8)
+	char XorO;
+	if (gs_tictactoe_getSpaceState(game, i, j) == 1)
 	{
-		cout << "  " << i << "     " << i + 1 << "     " << i + 2 << endl;
-		cout << "  " << changes[i] << "  |  " << changes[i + 1] << "  |  " << changes[i + 2] << "  \n" << "-------------------" << endl;
-		i += 3;
+		XorO = 'X';
+	}
+	else if (gs_tictactoe_getSpaceState(game, i, j) == 2)
+	{
+		XorO = 'O';
+	}
+	else
+	{
+		XorO = ' ';
+	}
+	return XorO;
+}
+
+void drawBoard(gs_tictactoe game)
+{
+	int c;
+	for(int i =0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			std::cout << "  " << XOPrinter(game, i, j) << "  |";
+		}
+		std::cout << "\n-------------------" << std::endl;
 	}
 }
 
-bool testForWinner(vector<char> changes)
+bool winCondition(gs_tictactoe game)
 {
-	int i = 0;
-	while (i <= 8)
+	for (int i = 0; i < 3; i++)
 	{
-		if (changes[0] == 'X' || changes[0] == 'O')
+		//check rows
+		if (gs_tictactoe_getSpaceState(game, i, 0) != 0 && gs_tictactoe_getSpaceState(game, i, 0) == gs_tictactoe_getSpaceState(game, i, 1) && gs_tictactoe_getSpaceState(game, i, 1) == gs_tictactoe_getSpaceState(game, i, 2))
 		{
-			if (changes[0] == changes[1] && changes[1] == changes[2])
-			{
-				cout << "this one";
-				return true;
-			}
-			else if (changes[0] == changes[3] && changes[3] == changes[6])
-			{
-				cout << "this four";
-				return true;
-			}
-			else if (changes[0] == changes[4] && changes[4] == changes[8])
-			{
-				cout << "this two";
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return true;
 		}
-		if (changes[4] == 'X' || changes[4] == 'O')
+		//check columns
+		else if (gs_tictactoe_getSpaceState(game, 0, i) != 0 && gs_tictactoe_getSpaceState(game, 0, i) == gs_tictactoe_getSpaceState(game, 1, i) && gs_tictactoe_getSpaceState(game, 1, i) == gs_tictactoe_getSpaceState(game, 2, i))
 		{
-			if (changes[1] == changes[4] && changes[4] == changes[7])
-			{
-				cout << "this one";
-				return true;
-			}
-			else if (changes[3] == changes[4] && changes[4] == changes[5])
-			{
-				cout << "this four";
-				return true;
-			}
-			else if (changes[0] == changes[4] && changes[4] == changes[8])
-			{
-				cout << "this two";
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return true;
 		}
-		i += 3;
 	}
+	//check diagonals
+	if (gs_tictactoe_getSpaceState(game, 0, 0) != 0 && gs_tictactoe_getSpaceState(game, 0, 0) == gs_tictactoe_getSpaceState(game, 1, 1) && gs_tictactoe_getSpaceState(game, 1, 1) == gs_tictactoe_getSpaceState(game, 2, 2))
+	{
+		return true;
+	}
+	else if (gs_tictactoe_getSpaceState(game, 0, 2) != 0 && gs_tictactoe_getSpaceState(game, 0, 2) == gs_tictactoe_getSpaceState(game, 1, 1) && gs_tictactoe_getSpaceState(game, 1, 1) == gs_tictactoe_getSpaceState(game, 2, 0))
+	{
+		return true;
+	}
+
+	return false;
 }
 
 int launchTicTacToe()
@@ -136,58 +130,57 @@ int launchTicTacToe()
 
 	gs_tictactoe_reset(game);
 
-	srand(time(0));
-
 	char turn = 'X';
-	char t = 'y';
-	vector<char> changes;
-	int spaceChosen = 0;
-	int rounds = 1;
-	changes.resize(9);
+	int column, row, rounds = 1;
 
-	while (t == 'y')
+	std::cout << "Round " << rounds << std::endl;
+	drawBoard(game);
+
+	while (rounds <= 9 && winCondition(game) == false)
 	{
-		cout << "Round " << rounds << endl;
-		drawBoard(changes);
+		std::cout << "Player " << turn << " turn" << std::endl;
 
-		cout << "Player " << turn << " turn" << endl;
-		cout << "Chose a space" << endl;
-		cin >> spaceChosen;
+		std::cout << "Enter a column:";
+		std::cin >> column;
 
-		if (spaceChosen >= 0 && spaceChosen <= 8 && changes[spaceChosen] != 'X' && changes[spaceChosen] != 'O')
+		std::cout << "Enter a row:";
+		std::cin >> row;
+
+		if (turn == 'X' && gs_tictactoe_getSpaceState(game, column, row) == 0)
 		{
-			if (turn == 'X')
-			{
-				changes[spaceChosen] = 'X';
-				turn = 'O';
-			}
-			else if (turn == 'O')
-			{
-				changes[spaceChosen] = 'O';
-				turn = 'X';
-			}
+			gs_tictactoe_setSpaceState(game, gs_tictactoe_space_x, column, row);
+			turn = 'O';
+			rounds++;
+		}
+		else if (turn == 'O' && gs_tictactoe_getSpaceState(game, column, row) == 0)
+		{
+			gs_tictactoe_setSpaceState(game, gs_tictactoe_space_o, column, row);
+			turn = 'X';
 			rounds++;
 		}
 		else
 		{
-			cout << "Invalid space entered" << endl;
+			std::cout << "Space taken" << std::endl;
 		}
-		
-		if (testForWinner(changes) == true)
-		{
-			cout << "Player " << turn << " Wins!" << endl;
-			cout << "Would you like to play again?(y for yes, n for no)" << endl;
-			cin >> t;
-			rounds = 1;
-		}
-		if (rounds == 9)
-		{
-			cout << "Tie game!" << endl;
-			cout << "Would you like to play again?(y for yes, n for no)" << endl;
-			cin >> t;
-			rounds = 1;
-		}
+		std::cout << "Round " << rounds << std::endl;
+		drawBoard(game);
 	}
+
+	if( turn == 'X')
+	{
+		std::cout << "Player X Wins!";
+	}
+	else if (turn == 'O')
+	{
+		std::cout << "Player Y Wins!";
+	}
+	else
+	{
+		std::cout << "Tie Game!";
+	}
+
+	gs_tictactoe_setSpaceState(game, gs_tictactoe_space_x , 0, 0);
+
 	return 0;
 }
 
