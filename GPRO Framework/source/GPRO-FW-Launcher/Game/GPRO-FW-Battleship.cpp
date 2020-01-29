@@ -89,17 +89,22 @@ void setUpGame(gs_battleship game, int player)
 {
 	char shipToBePlaced;
 	int column, row;
-	cout << "What ship would you like to place?: (P)atrol, (S)ubmarine, (D)estroyer, (B)attleship, (C)arrier";
+	cout << "What ship would you like to place, (P)atrol, (S)ubmarine, (D)estroyer, (B)attleship, (C)arrier?:";
 	cin >> shipToBePlaced;
+	cout << "Enter the spots to be taken by your ships";
 
 	switch (shipToBePlaced)
 	{
 	case 'P':
-		cout << "Enter a column: ";
-		cin >> column;
-		cout << "Enter a row: ";
-		cin >> row;
-		gs_battleship_setSpaceState(game, player, column, row);
+		for (int i = 0; i < 2; i++)
+		{
+			cout << "Enter a column: ";
+			cin >> column;
+			cin.ignore();
+			cout << "Enter a row: ";
+			cin >> row;
+			gs_battleship_setSpaceState(game, gs_battleship_space_patrol2, player, column, row);
+		}
 		break;
 	case 'S':
 		break;
@@ -124,10 +129,14 @@ int launchBattleship()
 
 	setUpGame(game, player);
 
+	drawBoard(game);
+
+	/*
 	cout << "Enter a column: ";
 	cin >> column;
 	cout << "Enter a row: ";
 	cin >> row;
+	*/
 
 
 	return 0;
