@@ -70,15 +70,15 @@ inline gs_battleship_index gs_battleship_reset(gs_battleship game)
 //-----------------------------------------------------------------------------
 // DEFINITIONS
 
-void drawBoard(gs_battleship game)
+void drawBoard(gs_battleship game, int player)
 {
-	cout << "  A|B|C|D|E|F|G|H|I|J|" << endl;
-	for (int i = 1; i < 10; i++)
+	cout << "  0|1|2|3|4|5|6|7|8|9|" << endl;
+	for (int i = 0; i < 10; i++)
 	{
 		cout << i << " ";
 		for (int j = 0; j < 10; j++)
 		{
-			cout << gs_battleship_getSpaceState(game, 1, i, j) << "|";
+			cout << gs_battleship_getSpaceState(game, player, i, j) << "|";
 		}
 		cout << "\n  --------------------" << endl;
 	}
@@ -107,13 +107,72 @@ void setUpGame(gs_battleship game, int player)
 		}
 		break;
 	case 'S':
+		for (int i = 0; i < 3; i++)
+		{
+			cout << "Enter a column: ";
+			cin >> column;
+			cin.ignore();
+			cout << "Enter a row: ";
+			cin >> row;
+			gs_battleship_setSpaceState(game, gs_battleship_space_submarine3, player, column, row);
+		}
 		break;
 	case 'D':
+		for (int i = 0; i < 3; i++)
+		{
+			cout << "Enter a column: ";
+			cin >> column;
+			cin.ignore();
+			cout << "Enter a row: ";
+			cin >> row;
+			gs_battleship_setSpaceState(game, gs_battleship_space_destroyer3, player, column, row);
+		}
 		break;
 	case 'B':
+		for (int i = 0; i < 4; i++)
+		{
+			cout << "Enter a column: ";
+			cin >> column;
+			cin.ignore();
+			cout << "Enter a row: ";
+			cin >> row;
+			gs_battleship_setSpaceState(game, gs_battleship_space_battleship4, player, column, row);
+		}
 		break;
 	case 'C':
+		for (int i = 0; i < 5; i++)
+		{
+			cout << "Enter a column: ";
+			cin >> column;
+			cin.ignore();
+			cout << "Enter a row: ";
+			cin >> row;
+			gs_battleship_setSpaceState(game, gs_battleship_space_carrier5, player, column, row);
+		}
 		break;
+	}
+}
+
+void playersTurn(gs_battleship game, int player)
+{
+	int column, row;
+	cout << "Player " << player << " turn" << endl;
+	cout << "Enter a place to attack" << endl;
+
+	cout << "Column: ";
+	cin >> column;
+
+	cout << "Row: ";
+	cin >> row;
+	if (gs_battleship_getSpaceState(game, player, column, row) == gs_battleship_space_open)
+	{
+		cout << "Miss" << endl;
+		gs_battleship_setSpaceState(game, gs_battleship_space_miss, player, column, row);
+	}
+	else if (gs_battleship_getSpaceState(game, player, column, row) >= 1)
+	{
+		cout << "Hit" << endl;
+		gs_battleship_setSpaceState(game, gs_battleship_space_hit, player, column, row);
 	}
 }
 
@@ -124,21 +183,23 @@ int launchBattleship()
 	gs_battleship_reset(game);
 
 	int column, row, player = 0;
+	bool t = false, setup = true;
 
-	drawBoard(game);
+	while (t == false)
+	{
+		drawBoard(game, player);
 
-	setUpGame(game, player);
+		for(int i = 0; i < 10; i++)
+		{
+			if (i == 4)
+			{
+				player = 1;
+			}
+			setUpGame(game, player);
+		}
 
-	drawBoard(game);
-
-	/*
-	cout << "Enter a column: ";
-	cin >> column;
-	cout << "Enter a row: ";
-	cin >> row;
-	*/
-
-
+		playersTurn(game, player);
+	}
 	return 0;
 }
 

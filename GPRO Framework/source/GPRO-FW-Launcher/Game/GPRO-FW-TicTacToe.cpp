@@ -140,10 +140,10 @@ int launchTicTacToe()
 	{
 		std::cout << "Player " << turn << " turn" << std::endl;
 
-		std::cout << "Enter a column:";
+		std::cout << "Enter a row:";
 		std::cin >> column;
 
-		std::cout << "Enter a row:";
+		std::cout << "Enter a column:";
 		std::cin >> row;
 
 		if (turn == 'X' && gs_tictactoe_getSpaceState(game, column, row) == 0)
@@ -172,7 +172,7 @@ int launchTicTacToe()
 	}
 	else if (turn == 'O')
 	{
-		std::cout << "Player Y Wins!";
+		std::cout << "Player 0  Wins!";
 	}
 	else
 	{
