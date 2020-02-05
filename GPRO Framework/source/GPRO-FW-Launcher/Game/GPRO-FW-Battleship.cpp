@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <ctime>
 #include <iostream>
 using namespace std;
 
@@ -70,6 +71,8 @@ inline gs_battleship_index gs_battleship_reset(gs_battleship game)
 //-----------------------------------------------------------------------------
 // DEFINITIONS
 
+
+//couts board by line
 void drawBoard(gs_battleship game, int player)
 {
 	cout << "  0|1|2|3|4|5|6|7|8|9|" << endl;
@@ -85,10 +88,23 @@ void drawBoard(gs_battleship game, int player)
 
 }
 
+//
 void setUpGame(gs_battleship game, int player)
 {
 	char shipToBePlaced;
 	int column, row;
+
+	srand(time(NULL));
+	/*
+	for (int i = 0; i < 5; i++)
+	{
+		int shipX, shipY;
+		shipX = rand() % 9 + 1;
+		gs_battleship_setSpaceState(game, gs_battleship_space_patrol2, 0, shipX, shipY);
+		gs_battleship_setSpaceState(game, gs_battleship_space_patrol2, 0, shipX + 1, shipY + 1);
+	}
+
+	
 	cout << "What ship would you like to place, (P)atrol, (S)ubmarine, (D)estroyer, (B)attleship, (C)arrier?:";
 	cin >> shipToBePlaced;
 	cout << "Enter the spots to be taken by your ships";
@@ -150,20 +166,25 @@ void setUpGame(gs_battleship game, int player)
 			gs_battleship_setSpaceState(game, gs_battleship_space_carrier5, player, column, row);
 		}
 		break;
-	}
+		
+	}*/
 }
 
+//player goes through a single turn
 void playersTurn(gs_battleship game, int player)
 {
 	int column, row;
-	cout << "Player " << player << " turn" << endl;
+	cout << "Player " << player << " turn" << endl;//diaplsy player whos turn it is
 	cout << "Enter a place to attack" << endl;
 
+	//recieve attack coordinates
 	cout << "Column: ";
 	cin >> column;
 
 	cout << "Row: ";
 	cin >> row;
+
+	//if , space is open, cout: miss, else: hit!
 	if (gs_battleship_getSpaceState(game, player, column, row) == gs_battleship_space_open)
 	{
 		cout << "Miss" << endl;
@@ -171,7 +192,7 @@ void playersTurn(gs_battleship game, int player)
 	}
 	else if (gs_battleship_getSpaceState(game, player, column, row) >= 1)
 	{
-		cout << "Hit" << endl;
+		cout << "Hit!" << endl;
 		gs_battleship_setSpaceState(game, gs_battleship_space_hit, player, column, row);
 	}
 }

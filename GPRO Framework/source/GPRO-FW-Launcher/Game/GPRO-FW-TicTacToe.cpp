@@ -65,6 +65,7 @@ inline gs_tictactoe_index gs_tictactoe_reset(gs_tictactoe game)
 //-----------------------------------------------------------------------------
 // DEFINITIONS
 
+//helps drawBoard(), correctly display X, O, or blank space
 char XOPrinter(gs_tictactoe game, int i, int j)
 {
 	char XorO;
@@ -83,6 +84,7 @@ char XOPrinter(gs_tictactoe game, int i, int j)
 	return XorO;
 }
 
+//couts board, prints by line
 void drawBoard(gs_tictactoe game)
 {
 	int c;
@@ -96,6 +98,7 @@ void drawBoard(gs_tictactoe game)
 	}
 }
 
+//winCondition checks spaces x, y rows if no win check x, y colums, if not checks x,y diagonals, if not checks y, x diagonals, else return flse
 bool winCondition(gs_tictactoe game)
 {
 	for (int i = 0; i < 3; i++)
@@ -136,6 +139,8 @@ int launchTicTacToe()
 	std::cout << "Round " << rounds << std::endl;
 	drawBoard(game);
 
+#ifndef gameLoop
+
 	while (rounds <= 9 && winCondition(game) == false)
 	{
 		std::cout << "Player " << turn << " turn" << std::endl;
@@ -146,18 +151,21 @@ int launchTicTacToe()
 		std::cout << "Enter a column:";
 		std::cin >> row;
 
+		//X turn
 		if (turn == 'X' && gs_tictactoe_getSpaceState(game, column, row) == 0)
 		{
 			gs_tictactoe_setSpaceState(game, gs_tictactoe_space_x, column, row);
 			turn = 'O';
 			rounds++;
 		}
+		//O turn
 		else if (turn == 'O' && gs_tictactoe_getSpaceState(game, column, row) == 0)
 		{
 			gs_tictactoe_setSpaceState(game, gs_tictactoe_space_o, column, row);
 			turn = 'X';
 			rounds++;
 		}
+		//space taken
 		else
 		{
 			std::cout << "Space taken" << std::endl;
@@ -166,6 +174,7 @@ int launchTicTacToe()
 		drawBoard(game);
 	}
 
+	//win condition; Player x wins if not, O wins, otherwise tie game
 	if( turn == 'X')
 	{
 		std::cout << "Player X Wins!";
@@ -179,6 +188,7 @@ int launchTicTacToe()
 		std::cout << "Tie Game!";
 	}
 
+#endif
 	gs_tictactoe_setSpaceState(game, gs_tictactoe_space_x , 0, 0);
 
 	return 0;
